@@ -5,9 +5,9 @@
      <div class="inner">
         <form class="pure-form pure-form-aligned" action="{{url_for('import_page')}}" method="POST">
             <fieldset class="pure-group">
-                <legend>One URL per line, URLs that do not pass validation will stay in the textarea.</legend>
+                <legend>One URL incl tag per line, separated by ";". Tags may be omitted completely (e.g. "https://url.com"). URLs that do not pass validation will stay in the textarea.</legend>
 
-                <textarea name="urls" class="pure-input-1-2" placeholder="https://"
+                <textarea name="urls" class="pure-input-1-2" placeholder="https://url.com;tag"
                           style="width: 100%;
                                 font-family:monospace;
                                 white-space: pre;
