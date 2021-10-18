@@ -554,15 +554,22 @@ def changedetection_app(config=None, datastore_o=None):
         if request.method == 'POST':
             urls = request.values.get('urls').split("\n")
             for url in urls:
+                url_tag = url.split(";")
+                url = url_tag[0]
+                if(len(url_tag) > 1):
+                    tag_val = url_tag[1]
+                else:
+                    tag_val = ""
                 url = url.strip()
                 if len(url) and validators.url(url):
-                    new_uuid = datastore.add_watch(url=url.strip(), tag="")
+                    new_uuid = datastore.add_watch(url=url.strip(), tag=tag_val)
                     # Straight into the queue.
                     update_q.put(new_uuid)
                     good += 1
                 else:
                     if len(url):
                         remaining_urls.append(url)
+
 
             flash("{} Imported, {} Skipped.".format(good, len(remaining_urls)))
 
