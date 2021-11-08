@@ -178,17 +178,19 @@ class ValidateCSSJSONInput(object):
 
     def __call__(self, form, field):
         if 'json:' in field.data:
-            from jsonpath_ng.exceptions import JsonPathParserError
-            from jsonpath_ng import jsonpath, parse
+            from jsonpath_ng.exceptions import JsonPathParserError, JsonPathLexerError
+            from jsonpath_ng.ext import parse
 
             input = field.data.replace('json:', '')
 
             try:
                 parse(input)
-            except JsonPathParserError as e:
+            except (JsonPathParserError, JsonPathLexerError) as e:
                 message = field.gettext('\'%s\' is not a valid JSONPath expression. (%s)')
                 raise ValidationError(message % (input, str(e)))
 
+            # Re #265 - maybe in the future fetch the page and offer a
+            # warning/notice that its possible the rule doesnt yet match anything?
 
 class quickWatchForm(Form):
     # https://wtforms.readthedocs.io/en/2.3.x/fields/#module-wtforms.fields.html5

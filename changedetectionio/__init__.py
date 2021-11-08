@@ -30,7 +30,7 @@ import datetime
 import pytz
 from copy import deepcopy
 
-__version__ = '0.39.2'
+__version__ = '0.39.3'
 
 datastore = None
 
@@ -785,9 +785,9 @@ def changedetection_app(config=None, datastore_o=None):
     @app.route("/api/clone", methods=['GET'])
     @login_required
     def api_clone():
-
         uuid = request.args.get('uuid')
-        datastore.clone(uuid)
+        new_uuid = datastore.clone(uuid)
+        update_q.put(new_uuid)
         flash('Cloned.')
 
         return redirect(url_for('index'))
@@ -909,7 +909,6 @@ def ticker_thread_check_time_launch_checks():
 
         # Check for watches outside of the time threshold to put in the thread queue.
         for uuid, watch in copied_datastore.data['watching'].items():
-
             # If they supplied an individual entry minutes to threshold.
             if 'minutes_between_check' in watch and watch['minutes_between_check'] is not None:
                 # Cast to int just incase
